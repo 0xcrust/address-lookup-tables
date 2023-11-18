@@ -1,0 +1,39 @@
+{
+  "name": "solana-alt-tutorial",
+  "version": "1.0.0",
+  "description": "Atomic composition of defi actions on Solana using LUTs",
+  "main": "index.js",
+  "author": "ademolafatoke@gmail.com",
+  "license": "MIT",
+  "scripts": {
+    "prettier": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
+    "lint": "eslint -c ./.eslintrc.yml --ext .ts,.tsx src",
+    "lint:fix": "eslint -c ./.eslintrc.yml --ext .ts,.tsx src --fix"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.29.0",
+    "@marinade.finance/marinade-ts-sdk": "^5.0.6",
+    "@orca-so/common-sdk": "^0.3.5",
+    "@orca-so/whirlpools-sdk": "^0.11.7",
+    "@solana/spl-token": "0.3.7",
+    "@solana/wallet-adapter-base": "^0.9.23",
+    "@solana/web3.js": "^1.87.6",
+    "@sunrisestake/client": "^0.1.16",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.9.0",
+    "@typescript-eslint/eslint-plugin": "^5.50.0",
+    "@typescript-eslint/parser": "^5.50.0",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-standard-with-typescript": "^34.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "6.1.1",
+    "eslint-plugin-react": "^7.32.2",
+    "prettier": "^2.6.2"
+  }
+}
