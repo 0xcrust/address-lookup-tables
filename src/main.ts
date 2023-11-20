@@ -78,6 +78,7 @@ const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey(
   let provider = AnchorProvider.env();
 
   const user = Keypair.generate();
+  // Request an airdrop so we have 1510 SOL to start with.
   const txSig = await provider.connection.requestAirdrop(
     user.publicKey,
     1510 * LAMPORTS_PER_SOL
@@ -86,6 +87,7 @@ const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey(
 
   provider = new AnchorProvider(provider.connection, new Wallet(user), {});
 
+  // Initialize the Sunrise-Stake client.
   const sunrise = await SunriseStakeClient.get(
     provider,
     WalletAdapterNetwork.Mainnet,
@@ -106,6 +108,7 @@ const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey(
     }
   );
 
+  // Create our Lookup Table.
   const [createIx, lookupTable] = AddressLookupTableProgram.createLookupTable({
     authority: provider.publicKey,
     payer: provider.publicKey,
@@ -115,8 +118,9 @@ const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey(
   await provider.sendAndConfirm(createLookup);
   console.log(`> Lookup table created with address ${lookupTable.toBase58()}.`);
 
-  // We do this ourselves here to avoid errors caused by both the stake-pool & orca clients
-  // generating instructions to create the same token account(happens for Bsol).
+  // We create the user's USDC and bSOL token accounts beforehand here to avoid errors 
+  // caused by both the stake-pool & orca clients each generating instructions to create 
+  // the same token account(happens for bSOL).
   const [userUsdcATA] = PublicKey.findProgramAddressSync(
     [
       user.publicKey.toBuffer(),
@@ -217,10 +221,10 @@ const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey(
   const whirlpool = await whirlpoolClient.getPool(whirlpoolPda.publicKey);
   const whirlpoolData = whirlpool.getData();
 
-  // We need to make sure that the user's bSOL ATA exists before this. Otherwise this call sees that the account
-  // doesn't exist and pushes an instruction to create it. This runs into an error because by the time this
-  // instruction is called, another create instruction returned by the spl-stake-pool's `depositSol` method has
-  // already created the account.
+  // We need to make sure that the user's bSOL ATA exists before this. Otherwise this call sees that it
+  // doesn't exist and generates an instruction to create it. This runs into an error because by the time 
+  // this instruction is called, another create instruction returned by the spl-stake-pool's `depositSol` 
+  // method has already created the account.
   const inputTokenQuote = await swapQuoteByInputToken(
     whirlpool,
     whirlpoolData.tokenMintA, // bSOL/USDC pool. Our input is bSOL
@@ -326,6 +330,7 @@ const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey(
     );
   }
 
+  // Create our transaction message and compile it into a V0 message.
   const message = new TransactionMessage({
     payerKey: provider.publicKey,
     recentBlockhash: await provider.connection
@@ -343,6 +348,7 @@ const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey(
 
   transaction.sign([user as Signer].concat(blazeDepositSigners));
 
+  // Send and confirm our transaction
   try {
     console.log("> Sending transaction...");
     const signature = await provider.connection.sendTransaction(transaction);
@@ -426,6 +432,7 @@ const ASSOCIATED_TOKEN_PROGRAM_ID = new PublicKey(
   console.log("Final USDC balance: ", usdcBalance);
 })().catch(console.error);
 
+/** Dependency issues with @solana/spl-token means we have to inline this.*/
 function createATAInstruction(
   user: PublicKey,
   ATA: PublicKey,
@@ -445,6 +452,7 @@ function createATAInstruction(
   });
 }
 
+/** Dependency issues with @solana/spl-token means we have to inline this.*/
 async function getTokenAccountBalance(
   provider: AnchorProvider,
   owner: PublicKey,
