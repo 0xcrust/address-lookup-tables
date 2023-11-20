@@ -1,10 +1,11 @@
 /*
 This is the main script. It:
-1. Deposits SOL to sunrise, staking by proxy and receiving gSOL in return.
-2. Stakes SOL to marinade, receiving mSOL.
-3. Deposits SOL to marinade's liquidity pool, receiving mSOL-SOL-LP(Marinade's liquidity pool token).
-4. Stakes SOL to blaze, receiving bSOL.
-5. Swaps bSOL for USDC from an Orca whirlpool.
+1. Deposits SOL to Sunrise Stake, staking by proxy and receiving gSOL in return.
+2. Lock GSOL with Sunrise.
+3. Stakes SOL to Marinade, receiving mSOL.
+4. Deposits SOL to Marinade's liquidity pool, receiving mSOL-SOL-LP(Marinade's liquidity pool token).
+5. Stakes SOL to Blaze, receiving bSOL.
+6. Swaps bSOL for USDC from an Orca whirlpool.
 
 Due to the setup behaviour, this script is vulnerable to errors due to a possible change of state of 
 a program's accounts during the dump, which may leave accounts in  an inconsistent state. 
